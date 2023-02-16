@@ -6,12 +6,14 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  //Las props se pasan desde el app como propiedades a continuacion
+  //<App propiedades="Esto es una propiedad" />
+  // si se abre y se cierra un componente, se pueden enviar propiedades como a continuacion
+  /*<App>
+    Esto es una propiedad Children
+  </App>*/
   <React.StrictMode>
-    <App />
+    <App/>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
