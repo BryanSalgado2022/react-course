@@ -1,8 +1,19 @@
-import React from 'react'
+import React from 'react';
+import '../css/Button.css'
 
 function AddTodoButton(props) {
+
+  const onClickButton = (msg) => {
+    alert(msg);
+  };
+
     return (
-      <button>+</button>
+      <button 
+        className='btn'
+        onClick={() => onClickButton('Se ha creado una alerta')}
+      >
+        +
+      </button>
     );
 }
 

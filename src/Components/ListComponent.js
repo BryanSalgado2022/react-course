@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import '../css/List.css'
 
 function List(props) {
     return (

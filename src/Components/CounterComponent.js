@@ -1,8 +1,10 @@
-import React from 'react'
+import React from 'react';
+import '../css/Counter.css';
 
-function Counter(){
+function Counter({total, completed}){
+
     return(
-        <h2>Has completado 2 de 3 Todo's</h2>
+        <h2 className='counterTitle'>Has completado {completed} de {total} Todo's</h2>
     );
 }
 

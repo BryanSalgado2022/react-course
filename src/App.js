@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import { useState } from 'react';
 //import './App.css';
 import React from 'react';
 import { Counter } from './Components/CounterComponent';
@@ -8,14 +9,30 @@ import { Item } from './Components/ItemComponent';
 import { AddTodoButton } from './Components/AddTodoButtonComponent';
 
 
-const todos = [
-  {text:'Cortar cebolla', completed: false},
-  {text:'Tomar los cursos', completed: false},
+const defaultTodos = [
+  {text:'Cortar cebolla', completed: true},
+  {text:'Tomar los cursos', completed: true},
   {text:'Comprar el mercado', completed: false}
 ];
 
 //Las props se deben recibir como argumentos dentro del componente
 function App(/*props*/) {
+  const [todos, setTodos] = useState(defaultTodos);
+  const [search, setSearch] = useState();
+
+  const completedTodos = todos.filter(todo => todo.completed).length;
+  const totalTodos = todos.length;
+
+  let searchedTodos = [];
+  if(!search.length >= 1){
+    searchedTodos = todos;
+  }else{
+    searchedTodos = todos.filter(todo => {
+      const todoText = todo.text.toLowerCase();
+      const searchtext = search.toLowerCase();
+      todoText.includes(searchtext);
+    })  
+  }
   return (
     /*<div className="App">
       <header className="App-header">
@@ -41,12 +58,22 @@ function App(/*props*/) {
 
     //React fragment renderiza un espacio invisible el cual no afectará la estructura del HTML
     <>
-      <Counter/>
-      <Search/>
+      <Counter
+        total={totalTodos}
+        completed={completedTodos}
+      />
+      <Search
+        searchValue={search}
+        setSearch={setSearch}
+      />
       <List>
         {
-          todos.map((todo) => (
-            <Item key={todo.text} text={todo.text}/>
+          searchedTodos.map((todo) => (
+            <Item 
+              key={todo.text} 
+              text={todo.text}
+              completed={todo.completed}
+            />
           ))
         }
       </List>
