@@ -18,7 +18,7 @@ const defaultTodos = [
 //Las props se deben recibir como argumentos dentro del componente
 function App(/*props*/) {
   const [todos, setTodos] = useState(defaultTodos);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState('');
 
   const completedTodos = todos.filter(todo => todo.completed).length;
   const totalTodos = todos.length;
@@ -30,7 +30,7 @@ function App(/*props*/) {
     searchedTodos = todos.filter(todo => {
       const todoText = todo.text.toLowerCase();
       const searchtext = search.toLowerCase();
-      todoText.includes(searchtext);
+      return todoText.includes(searchtext);
     })  
   }
   return (
