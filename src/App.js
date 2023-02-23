@@ -33,6 +33,32 @@ function App(/*props*/) {
       return todoText.includes(searchtext);
     })  
   }
+
+  const completeTodo = (text) => {
+    const todoIndex = todos.findIndex(todo => todo.text === text);
+    const newTodos = [...todos];
+
+    //una forma
+    // todos[todoIndex] = {
+    //   text: todos[todoIndex].text,
+    //   completed: true
+    // };
+    //Otra forma
+    //newTodos[todoIndex].completed = true;
+    //Tercera forma
+    newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
+    //Se actualiza el estado con los Todos marcados
+
+    setTodos(newTodos);
+  };
+
+  const deleteTodo = (text) => {
+    const todoIndex = todos.findIndex(todo => todo.text === text);
+    const newTodos = [...todos];
+    newTodos.splice(todoIndex, 1);
+
+    setTodos(newTodos);
+  }
   return (
     /*<div className="App">
       <header className="App-header">
@@ -73,6 +99,8 @@ function App(/*props*/) {
               key={todo.text} 
               text={todo.text}
               completed={todo.completed}
+              onComplete={() => completeTodo(todo.text)}
+              onDelete={() => deleteTodo(todo.text)}
             />
           ))
         }
