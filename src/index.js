@@ -13,7 +13,8 @@ root.render(
     Esto es una propiedad Children
   </App>*/
   <React.StrictMode>
-    <App/>
+    <App
+    />
   </React.StrictMode>
 );
 

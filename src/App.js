@@ -1,5 +1,4 @@
-import logo from './logo.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 //import './App.css';
 import React from 'react';
 import { Counter } from './Components/CounterComponent';
@@ -9,15 +8,60 @@ import { Item } from './Components/ItemComponent';
 import { AddTodoButton } from './Components/AddTodoButtonComponent';
 
 
-const defaultTodos = [
+/* const defaultTodos = [
   {text:'Cortar cebolla', completed: true},
   {text:'Tomar los cursos', completed: true},
   {text:'Comprar el mercado', completed: false}
-];
+]; */
+function useLocalStorage(itemName, initialValue){
+  const [loading, setLoading] = useState(true);
+  const [item, setItem] = useState(initialValue);
+
+  useEffect(() => {
+    setTimeout(() => {
+      //El local Storage se encarga de guardar los objetos en el navegador
+      //El asunto es que no guarda nada que no sea texto directamente
+      const localStorageItem = localStorage.getItem(itemName);
+      let parsedItem;
+
+      if(!localStorageItem){
+        localStorage.setItem(itemName, JSON.stringify(initialValue));
+        parsedItem = initialValue;
+      }else{
+        parsedItem = JSON.parse(localStorageItem);
+      }
+
+      setItem(parsedItem);
+      setLoading(false);
+    }, 1000);
+  }, []);
+  
+  const saveItem = (newItem) => {
+    const stringifiedItem = JSON.stringify(newItem);
+    localStorage.setItem(itemName, stringifiedItem);
+    setItem(newItem);
+  };
+
+  return {
+    item,
+    saveItem,
+    loading,
+  };
+}
 
 //Las props se deben recibir como argumentos dentro del componente
-function App(/*props*/) {
-  const [todos, setTodos] = useState(defaultTodos);
+function App(/*props*/
+  loading, 
+  error, 
+
+) {
+
+  const {
+    item: todos, 
+    saveItem: saveTodos, 
+    loading: isLoading, 
+  } = useLocalStorage('TODOS_V1', []);
+
   const [search, setSearch] = useState('');
 
   const completedTodos = todos.filter(todo => todo.completed).length;
@@ -34,6 +78,7 @@ function App(/*props*/) {
     })  
   }
 
+
   const completeTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
     const newTodos = [...todos];
@@ -49,16 +94,30 @@ function App(/*props*/) {
     newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
     //Se actualiza el estado con los Todos marcados
 
-    setTodos(newTodos);
+    saveTodos(newTodos);
   };
 
   const deleteTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
     const newTodos = [...todos];
     newTodos.splice(todoIndex, 1);
+    saveTodos(newTodos);
+  };
 
-    setTodos(newTodos);
-  }
+  //console.log('Render antes del UseEffect');
+
+  //useEffect(() => {
+    //console.log('Use Effect');
+  //}, /* Solo se ejecutará una vez */ [] 
+  /* ///////////////////////////
+    Cuando hay cambios en el estado del contador de todos se actualiza de nuevo el useEffect
+    [totalTodos]
+    ////////////////////////////
+    si se mantiene vacio el segundo argumento se ejecutará continuamente
+  );*/
+
+  //console.log('Render despues del useEffect');
+
   return (
     /*<div className="App">
       <header className="App-header">
@@ -93,6 +152,9 @@ function App(/*props*/) {
         setSearch={setSearch}
       />
       <List>
+      {error && <p>Hubo un error...</p>}
+        {loading && <p>Está cargando no te apures</p>}
+        {(!loading && !searchedTodos.length) && <p>Crea tu primer Todo</p>}
         {
           searchedTodos.map((todo) => (
             <Item 
